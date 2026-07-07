@@ -2,6 +2,21 @@
 
 Repositorio con la resolución de los trabajos prácticos de la materia **Programación I / Algoritmos y Estructuras de Datos I**.
 
+## Índice
+
+- [Datos del alumno](#datos-del-alumno)
+- [Objetivo del repositorio](#objetivo-del-repositorio)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Crear la estructura inicial](#crear-la-estructura-inicial)
+- [Actualizar menús y README](#actualizar-menús-y-readme)
+- [Criterios generales de programación](#criterios-generales-de-programación)
+- [Qué se debe usar](#qué-se-debe-usar)
+- [Qué no se debe usar](#qué-no-se-debe-usar)
+- [Criterio general](#criterio-general)
+- [Clonar y reiniciar Git](#clonar-y-reiniciar-git)
+- [Verificar que el remoto sea correcto](#verificar-que-el-remoto-sea-correcto)
+- [Importante](#importante)
+
 ## Datos del alumno
 
 - **Apellido y nombre:** 
@@ -43,6 +58,46 @@ ayed1-tps/
 │
 └── tests/
 ```
+
+## Crear la estructura inicial
+
+El repositorio incluye dos scripts para crear la estructura base del proyecto desde cero:
+
+- `crear_estructura.sh`: para Linux, macOS o terminal Bash.
+- `crear_estructura.bat`: para Windows desde CMD o PowerShell.
+
+Ambos scripts crean las carpetas principales (`consignas/`, `ejercicios/`, `datos/`, `tests/`), los directorios de TP del 01 al 08, archivos `.gitkeep`, README iniciales por TP y un `.gitignore` básico.
+
+### Linux, macOS o Bash
+
+Desde la carpeta donde se quiere crear el proyecto:
+
+```bash
+chmod +x crear_estructura.sh
+./crear_estructura.sh
+```
+
+Por defecto crea una carpeta llamada `ayed1-tps`. También se puede indicar otro nombre:
+
+```bash
+./crear_estructura.sh mi-proyecto
+```
+
+### Windows
+
+Desde CMD o PowerShell, ubicándose en la carpeta donde se quiere crear el proyecto:
+
+```bat
+crear_estructura.bat
+```
+
+Por defecto crea una carpeta llamada `ayed1-tps`. También se puede indicar otro nombre:
+
+```bat
+crear_estructura.bat mi-proyecto
+```
+
+Estos scripts están pensados para preparar una estructura inicial. Si se ejecutan sobre una carpeta existente, pueden crear archivos faltantes y actualizar el `.gitignore` de esa estructura.
 
 ## Actualizar menús y README
 
@@ -478,3 +533,86 @@ Estos archivos deben quedar excluidos mediante `.gitignore` (usarlo de ejemplo).
 Cada ejercicio debe poder ejecutarse de forma independiente y debe mostrar resultados suficientes para comprobar su funcionamiento.
 
 El código debe ser correcto, claro, mantenible y respetuoso de las restricciones particulares de cada consigna.
+
+## Clonar y reiniciar Git
+
+Si no se usa la opción **Use this template** de GitHub, se puede clonar este repositorio y eliminar el historial de Git para comenzar un repositorio propio desde cero.
+
+Esta opción permite conservar la estructura de carpetas y archivos, pero descartar el historial del repositorio original.
+
+---
+
+### En Linux o macOS
+
+```bash
+git clone https://github.com/marianof2000/ayed3-tps apellido_nombre_ayed1_tps
+cd apellido_nombre_ayed1_tps
+
+rm -rf .git
+
+git init
+git add .
+git commit -m "Estructura inicial de trabajos prácticos"
+````
+
+Luego crear un repositorio vacío en GitHub y asociarlo:
+
+```bash
+git remote add origin https://github.com/usuario/apellido_nombre_ayed1_tps.git
+git branch -M main
+git push -u origin main
+```
+
+---
+
+### En Windows PowerShell
+
+```powershell
+git clone https://github.com/marianof2000/ayed3-tps apellido_nombre_ayed1_tps
+cd apellido_nombre_ayed1_tps
+
+Remove-Item -Recurse -Force .git
+
+git init
+git add .
+git commit -m "Estructura inicial de trabajos prácticos"
+```
+
+Luego crear un repositorio vacío en GitHub y asociarlo:
+
+```powershell
+git remote add origin https://github.com/usuario/apellido_nombre_ayed1_tps.git
+git branch -M main
+git push -u origin main
+```
+
+---
+
+## Verificar que el remoto sea correcto
+
+Antes de empezar a trabajar, verificar que el repositorio local apunte al repositorio propio del alumno:
+
+```bash
+git remote -v
+```
+
+La salida debe mostrar una URL correspondiente al repositorio propio, por ejemplo:
+
+```text
+origin  https://github.com/usuario/apellido_nombre_ayed1_tps.git (fetch)
+origin  https://github.com/usuario/apellido_nombre_ayed1_tps.git (push)
+```
+
+Si aparece la URL del repositorio original, se debe corregir el remoto:
+
+```bash
+git remote set-url origin https://github.com/usuario/apellido_nombre_ayed1_tps.git
+```
+
+---
+
+## Importante
+
+No se debe trabajar directamente sobre el repositorio original de la cátedra o plantilla.
+
+Cada alumno debe tener su propio repositorio, con su propio historial de commits.
