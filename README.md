@@ -455,16 +455,21 @@ No subir:
 ```text
 __pycache__/
 *.pyc
+
 .venv/
 venv/
 env/
+
 .vscode/
 .idea/
+
 *.log
 *.pdf
+
+.python-version
 ```
 
-Estos archivos deben quedar excluidos mediante `.gitignore`.
+Estos archivos deben quedar excluidos mediante `.gitignore` (usarlo de ejemplo).
 
 ---
 
