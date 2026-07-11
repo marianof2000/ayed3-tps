@@ -38,6 +38,11 @@ ayed1-tps/
 │
 ├── README.md
 ├── .gitignore
+├── crear_estructura.sh
+├── crear_estructura.bat
+├── generar_menus.py
+├── funciones.py
+├── contenido_menu.py
 │
 ├── consignas/
 │   └── P1_AyED1 - Guia de Trabajos Practicos 2024.pdf
@@ -103,11 +108,31 @@ Estos scripts están pensados para preparar una estructura inicial. Si se ejecut
 
 Cada vez que se agreguen, eliminen o renombren ejercicios, ejecutar desde la raíz del proyecto:
 
+En Linux, macOS o Bash:
+
 ```bash
 python3 generar_menus.py
 ```
 
+En Windows:
+
+```powershell
+python generar_menus.py
+```
+
+Si el comando `python` no está disponible en Windows, usar:
+
+```powershell
+py generar_menus.py
+```
+
 Ese comando actualiza automáticamente el `README.md` y el `menu.py` de cada directorio dentro de `ejercicios/`.
+
+La generación está separada en tres archivos:
+
+* `generar_menus.py`: punto de entrada que recorre los directorios de trabajos prácticos.
+* `funciones.py`: funciones auxiliares para buscar directorios y generar archivos.
+* `contenido_menu.py`: plantilla estática del `menu.py` generado automáticamente.
 
 ## Criterios generales de programación
 
@@ -545,7 +570,7 @@ Esta opción permite conservar la estructura de carpetas y archivos, pero descar
 ### En Linux o macOS
 
 ```bash
-git clone https://github.com/marianof2000/ayed3-tps apellido_nombre_ayed1_tps
+git clone https://github.com/marianof2000/ayed1-tps apellido_nombre_ayed1_tps
 cd apellido_nombre_ayed1_tps
 
 rm -rf .git
@@ -553,7 +578,7 @@ rm -rf .git
 git init
 git add .
 git commit -m "Estructura inicial de trabajos prácticos"
-````
+```
 
 Luego crear un repositorio vacío en GitHub y asociarlo:
 
@@ -568,7 +593,7 @@ git push -u origin main
 ### En Windows PowerShell
 
 ```powershell
-git clone https://github.com/marianof2000/ayed3-tps apellido_nombre_ayed1_tps
+git clone https://github.com/marianof2000/ayed1-tps apellido_nombre_ayed1_tps
 cd apellido_nombre_ayed1_tps
 
 Remove-Item -Recurse -Force .git

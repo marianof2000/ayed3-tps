@@ -16,217 +16,15 @@ Postcondiciones generales:
 """
 
 from pathlib import Path
+import os
 import re
-import textwrap
+import stat
 
+from contenido_menu import CONTENIDO_MENU
 
 CARPETA_EJERCICIOS: str = "ejercicios"
 NOMBRE_MENU: str = "menu.py"
 NOMBRE_README: str = "README.md"
-
-
-CONTENIDO_MENU: str = r'''#!/usr/bin/env python3
-"""
-Menú automático del Trabajo Práctico.
-
-Este archivo fue generado automáticamente por generar_menus.py.
-Detecta los ejercicios actuales del directorio y permite ejecutarlos.
-"""
-
-from pathlib import Path
-import subprocess
-import sys
-
-
-def _obtener_ejercicios() -> list[Path]:
-    """
-    Devuelve la lista de archivos de ejercicios del directorio actual.
-
-    Contrato:
-    - Busca ejercicios Python en la misma carpeta donde está este menu.py.
-    - Considera ejercicios a los archivos Python con formato tp*_ej*.py.
-
-    Precondiciones:
-    - El archivo menu.py debe estar dentro del directorio del TP.
-
-    Postcondiciones:
-    - Devuelve una lista ordenada de objetos Path.
-    - No modifica archivos ni directorios.
-
-    Se consideran ejercicios los archivos que empiezan con 'tp',
-    contienen '_ej' y terminan en '.py'.
-    """
-    carpeta_actual = Path(__file__).parent
-
-    ejercicios = sorted(
-        archivo
-        for archivo in carpeta_actual.glob("tp*_ej*.py")
-        if archivo.is_file()
-    )
-
-    return ejercicios
-
-
-def _mostrar_menu(ejercicios: list[Path]) -> None:
-    """
-    Muestra por pantalla las opciones disponibles del menú.
-
-    Contrato:
-    - Recibe una lista de ejercicios y presenta una opción por ejercicio.
-    - Siempre muestra la opción para salir.
-
-    Precondiciones:
-    - ejercicios debe ser una lista o iterable de objetos Path.
-
-    Postcondiciones:
-    - El menú queda impreso en pantalla.
-    - No modifica la lista recibida.
-    """
-    print()
-    print("=" * 60)
-    print(f"Menú de ejercicios - {Path(__file__).parent.name}")
-    print("=" * 60)
-
-    if not ejercicios:
-        print("No se encontraron ejercicios en este directorio.")
-        print("Los archivos deben llamarse, por ejemplo: tp01_ej01_nombre.py")
-        print()
-        print("0. Salir")
-        return
-
-    for i, ejercicio in enumerate(ejercicios, start=1):
-        print(f"{i}. {ejercicio.stem}")
-
-    print()
-    print("T. Ejecutar todos")
-    print("0. Salir")
-
-
-def _ejecutar_archivo(archivo: Path) -> None:
-    """
-    Ejecuta un archivo de ejercicio individual.
-
-    Contrato:
-    - Ejecuta el archivo recibido usando el mismo intérprete de Python.
-    - Informa si el archivo termina con errores.
-
-    Precondiciones:
-    - archivo debe ser un Path que apunte a un archivo Python existente.
-
-    Postcondiciones:
-    - El proceso del ejercicio fue lanzado.
-    - El usuario debe presionar ENTER para volver al menú.
-    """
-    print()
-    print("-" * 60)
-    print(f"Ejecutando: {archivo.name}")
-    print("-" * 60)
-
-    resultado = subprocess.run(
-        [sys.executable, str(archivo)],
-        cwd=archivo.parent
-    )
-
-    if resultado.returncode != 0:
-        print()
-        print(f"El archivo {archivo.name} terminó con errores.")
-
-    input("\nPresione ENTER para continuar...")
-
-
-def _ejecutar_todos(ejercicios: list[Path]) -> None:
-    """
-    Ejecuta todos los ejercicios recibidos.
-
-    Contrato:
-    - Recorre la lista de ejercicios y ejecuta cada archivo.
-    - Cuenta cuántos terminaron correctamente.
-
-    Precondiciones:
-    - ejercicios debe ser una lista o iterable de objetos Path.
-
-    Postcondiciones:
-    - Se imprime un resumen con la cantidad de ejecuciones correctas.
-    - El usuario debe presionar ENTER para volver al menú.
-    """
-    if not ejercicios:
-        print("No hay ejercicios para ejecutar.")
-        input("\nPresione ENTER para continuar...")
-        return
-
-    correctos = 0
-
-    for ejercicio in ejercicios:
-        print()
-        print("=" * 60)
-        print(f"Ejecutando: {ejercicio.name}")
-        print("=" * 60)
-
-        resultado = subprocess.run(
-            [sys.executable, str(ejercicio)],
-            cwd=ejercicio.parent
-        )
-
-        if resultado.returncode == 0:
-            correctos += 1
-        else:
-            print(f"El archivo {ejercicio.name} terminó con errores.")
-
-    print()
-    print("=" * 60)
-    print("Resumen")
-    print("=" * 60)
-    print(f"Ejercicios ejecutados correctamente: {correctos}/{len(ejercicios)}")
-
-    input("\nPresione ENTER para continuar...")
-
-
-def main() -> None:
-    """
-    Controla el ciclo principal del menú generado.
-
-    Contrato:
-    - Muestra opciones, lee la selección del usuario y ejecuta la acción elegida.
-    - Finaliza cuando el usuario ingresa 0.
-
-    Precondiciones:
-    - Debe ejecutarse desde un directorio TP con posibles archivos tp*_ej*.py.
-
-    Postcondiciones:
-    - El programa termina cuando el usuario elige salir.
-    - No altera los archivos de ejercicios.
-    """
-    while True:
-        ejercicios = _obtener_ejercicios()
-        _mostrar_menu(ejercicios)
-
-        opcion = input("\nSeleccione una opción: ").strip().lower()
-
-        if opcion == "0":
-            print("Fin del programa.")
-            break
-
-        if opcion == "t":
-            _ejecutar_todos(ejercicios)
-            continue
-
-        try:
-            numero = int(opcion)
-
-            if 1 <= numero <= len(ejercicios):
-                _ejecutar_archivo(ejercicios[numero - 1])
-            else:
-                print("Opción inválida.")
-                input("\nPresione ENTER para continuar...")
-
-        except ValueError:
-            print("Opción inválida.")
-            input("\nPresione ENTER para continuar...")
-
-
-if __name__ == "__main__":
-    main()
-'''
 
 
 def _formatear_titulo_tp(nombre_directorio: str) -> str:
@@ -285,6 +83,33 @@ def _obtener_ejercicios(directorio_tp: Path) -> list[Path]:
     )
 
 
+def _marcar_como_ejecutable_si_corresponde(ruta_archivo: Path) -> None:
+    """
+    Intenta marcar un archivo como ejecutable en sistemas compatibles.
+
+    Contrato:
+    - Agrega permisos de ejecución en Linux, macOS y otros sistemas POSIX.
+    - En Windows no modifica permisos porque el bit ejecutable POSIX no aplica.
+
+    Precondiciones:
+    - ruta_archivo debe ser un Path que apunte a un archivo existente.
+
+    Postcondiciones:
+    - Si el sistema lo permite, el archivo queda marcado como ejecutable.
+    - Si el sistema no lo permite, no interrumpe la generación del archivo.
+    """
+    if os.name == "nt":
+        return
+
+    permisos_actuales = ruta_archivo.stat().st_mode
+    permisos_ejecucion = stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
+
+    try:
+        ruta_archivo.chmod(permisos_actuales | permisos_ejecucion)
+    except OSError:
+        return
+
+
 def buscar_directorios_tp(raiz: Path) -> list[Path]:
     """
     Busca todos los directorios TP dentro de la carpeta ejercicios/.
@@ -335,15 +160,8 @@ def generar_menu_en_directorio(directorio_tp: Path) -> Path:
     """
     ruta_menu = directorio_tp / NOMBRE_MENU
 
-    ruta_menu.write_text(
-        textwrap.dedent(CONTENIDO_MENU),
-        encoding="utf-8"
-    )
-
-    try:
-        ruta_menu.chmod(ruta_menu.stat().st_mode | 0o111)
-    except OSError:
-        pass
+    ruta_menu.write_text(CONTENIDO_MENU, encoding="utf-8")
+    _marcar_como_ejecutable_si_corresponde(ruta_menu)
 
     return ruta_menu
 
@@ -368,73 +186,78 @@ def generar_readme_en_directorio(directorio_tp: Path) -> Path:
     ejercicios = _obtener_ejercicios(directorio_tp)
     titulo = _formatear_titulo_tp(directorio_tp.name)
 
-    lineas: list[str] = []
-
-    lineas.append(f"# {titulo}")
-    lineas.append("")
-    lineas.append("Este directorio contiene los ejercicios correspondientes a este trabajo práctico.")
-    lineas.append("")
-    lineas.append("> Archivo generado automáticamente por `generar_menus.py`.")
-    lineas.append("> Si se agregan, eliminan o renombran ejercicios, ejecutar nuevamente el script maestro.")
-    lineas.append("")
-
-    lineas.append("## Archivos incluidos")
-    lineas.append("")
+    lineas: list[str] = [
+        f"# {titulo}",
+        "",
+        "Este directorio contiene los ejercicios correspondientes a este trabajo práctico.",
+        "",
+        "> Archivo generado automáticamente por `generar_menus.py`.",
+        "> Si se agregan, eliminan o renombran ejercicios, ejecutar nuevamente el script maestro.",
+        "",
+        "## Archivos incluidos",
+        "",
+    ]
 
     if ejercicios:
-        lineas.append("| Nº | Archivo | Ejecución |")
-        lineas.append("|---:|---|---|")
+        lineas.extend([
+            "| Nº | Archivo | Ejecución |",
+            "|---:|---|---|",
+        ])
 
-        for indice, ejercicio in enumerate(ejercicios, start=1):
-            lineas.append(
-                f"| {indice} | `{ejercicio.name}` | `python {ejercicio.name}` |"
-            )
+        lineas.extend(
+            f"| {indice} | `{ejercicio.name}` | `python {ejercicio.name}` |"
+            for indice, ejercicio in enumerate(ejercicios, start=1)
+        )
     else:
-        lineas.append("No se encontraron archivos de ejercicios.")
-        lineas.append("")
-        lineas.append("Los archivos deben nombrarse con el formato:")
-        lineas.append("")
-        lineas.append("```text")
-        lineas.append("tp01_ej01_descripcion.py")
-        lineas.append("tp01_ej02_descripcion.py")
-        lineas.append("```")
+        lineas.extend([
+            "No se encontraron archivos de ejercicios.",
+            "",
+            "Los archivos deben nombrarse con el formato:",
+            "",
+            "```text",
+            "tp01_ej01_descripcion.py",
+            "tp01_ej02_descripcion.py",
+            "```",
+        ])
 
-    lineas.append("")
-    lineas.append("## Ejecutar un ejercicio")
-    lineas.append("")
-    lineas.append("Desde este directorio:")
-    lineas.append("")
-    lineas.append("```bash")
+    lineas.extend([
+        "",
+        "## Ejecutar un ejercicio",
+        "",
+        "Desde este directorio:",
+        "",
+        "```bash",
+    ])
     if ejercicios:
         lineas.append(f"python {ejercicios[0].name}")
     else:
         lineas.append("python tp01_ej01_nombre_del_ejercicio.py")
-    lineas.append("```")
-    lineas.append("")
-
-    lineas.append("## Ejecutar el menú")
-    lineas.append("")
-    lineas.append("Desde este directorio:")
-    lineas.append("")
-    lineas.append("```bash")
-    lineas.append("python menu.py")
-    lineas.append("```")
-    lineas.append("")
-
-    lineas.append("## Ejecutar todos los ejercicios")
-    lineas.append("")
-    lineas.append("Ingresar al menú:")
-    lineas.append("")
-    lineas.append("```bash")
-    lineas.append("python menu.py")
-    lineas.append("```")
-    lineas.append("")
-    lineas.append("Luego seleccionar la opción:")
-    lineas.append("")
-    lineas.append("```text")
-    lineas.append("T. Ejecutar todos")
-    lineas.append("```")
-    lineas.append("")
+    lineas.extend([
+        "```",
+        "",
+        "## Ejecutar el menú",
+        "",
+        "Desde este directorio:",
+        "",
+        "```bash",
+        "python menu.py",
+        "```",
+        "",
+        "## Ejecutar todos los ejercicios",
+        "",
+        "Ingresar al menú:",
+        "",
+        "```bash",
+        "python menu.py",
+        "```",
+        "",
+        "Luego seleccionar la opción:",
+        "",
+        "```text",
+        "T. Ejecutar todos",
+        "```",
+        "",
+    ])
 
     ruta_readme.write_text("\n".join(lineas), encoding="utf-8")
 
