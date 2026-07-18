@@ -1,4 +1,5 @@
-# Algoritmos y Estructuras de Datos I - Trabajos Prácticos
+# Algoritmos y Estructuras de Datos I
+## Trabajos Prácticos
 
 Repositorio con la resolución de los trabajos prácticos de la materia **Programación I / Algoritmos y Estructuras de Datos I**.
 
